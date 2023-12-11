@@ -1,0 +1,18 @@
+### openssl-1.0.2q d1_pkt.c
+/* mod 128 saturating subtract of two 64-bit values in big-endian order */
+static int satsub64be(const unsigned char *v1, const unsigned char *v2)
+{
+    int ret, i;
+
+    if (sizeof(long) == 8)
+        do {
+            const union {
+                long one;
+                char little;
+            } is_endian = {
+                1
+            };
+            long l;
+
+            if (is_endian.little)
+### END
