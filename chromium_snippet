@@ -1,0 +1,12 @@
+### chromium 78.0.3904.106 /base/allocator/allocator_shim.cc
+ALWAYS_INLINE void* ShimAlignedRealloc(void* address,
+                                       size_t size,
+                                       size_t alignment,
+                                       void* context) {
+  // _aligned_realloc(size == 0) means _aligned_free() and might return a
+  // nullptr. We should not call the std::new_handler in that case, though.
+  const base::allocator::AllocatorDispatch* const chain_head = GetChainHead();
+  void* ptr = nullptr;
+  do {
+    ptr = chain_head->aligned_realloc_function(chain_head, address, size,
+                                               alignment, context);
